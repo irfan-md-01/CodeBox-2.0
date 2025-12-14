@@ -7,48 +7,80 @@
 <h1>Python Online Compiler</h1>
 {% endblock %}
 
+{% block css %}
+<style>
+    #py_input {
+        width: 98%;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        font-family: monospace;
+    }
+
+    .btn {
+        padding: 12px 18px;
+        background: #4a6cf7;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .btn:hover {
+        background: #3a57d0;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <form method="POST" action="/">
     {% csrf_token %}
     <br>
-    <label for="code">Write your code:</label>
-    <textarea id="code" name="code" placeholder="Write your code here..." >{{ code|default:'' }}</textarea>
+    <label for="py_code">Write your code:</label>
+    <textarea id="py_code" name="py_code" placeholder="Write your code here...">{{ py_code|default:'' }}</textarea>
     <br>
-    <label for="input">Provide Input:</label>
-    <textarea id="input" name="input" placeholder="Enter input for your code...">{{ input_data|default:'' }} </textarea>
+    <label for="py_input">Provide Input:</label>
+    <textarea id="py_input" name="py_input"
+        placeholder="Enter input for your code...">{{ py_input_data|default:'' }} </textarea>
     <br>
-    <button type="submit" >Run Code</button>
+    <button type="submit">Run Code</button>
+    <button type="submit" name="action" value="share" class="btn">Share Code</button>
 </form>
-{% if output %}
+{% if py_output %}
 <div class="output">
     <h3>Output:</h3>
-    <pre>{{ output }}</pre>
+    <pre>{{ py_output }}</pre>
 </div>
 {% endif %}
 </div>
 
-<!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
-
 <script>
 
-const codeEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
-    mode: "python", 
-    theme: "dracula",
-    lineNumbers: true,
-    indentUnit: 4,
-    tabSize: 4,
-    
-});
-codeEditor.setSize(null, "410px");
-// Sync CodeMirror content to the hidden textarea
-document.querySelector("form").addEventListener("submit", () => {
-    document.getElementById("code").value = codeEditor.getValue();
-});
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("py_code"), {
+        mode: "python",
+        theme: "dracula",
+        lineNumbers: true,
+        indentUnit: 4,
+        tabSize: 4,
+        autoCloseBrackets: true,
+        indentUnit: 4,
+        smartIndent: true,
+        matchBrackets: true,
+        lineWrapping: true,
+        highlightSelectionMatches: true,
+        cursorBlinkRate: 530,
+        scrollbarStyle: "native",
+        viewportMargin: Infinity,
+
+    });
+
+    codeEditor.setSize("100%", "600px");
+
+    document.querySelector("form").addEventListener("submit", (event) => {
+        document.getElementById("py_code").value = codeEditor.getValue();
+    });
 
 </script>
 {% endblock %}

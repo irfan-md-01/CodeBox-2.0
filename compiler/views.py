@@ -12,10 +12,6 @@ def cpp(request):
         cpp_input_data = request.POST.get("cpp_input", "")
         language = "cpp"
         
-        # print("inside block of post req :")
-        # print( cpp_code)
-        # print("Did you see the message")
-
         request.session["cpp_code"] = cpp_code
         request.session["cpp_input"] = cpp_input_data
 
@@ -67,10 +63,6 @@ def java(request):
         java_input_data = request.POST.get("java_input", "")
         language = "java"
         
-        # print("inside block of post req :")
-        # print( java_code)
-        # print("Did you see the message")
-
         request.session["java_code"] = java_code
         request.session["java_input"] = java_input_data
 
@@ -111,35 +103,44 @@ def java(request):
     return render(request, "java.html", {"java_code": java_code, "java_input_data": java_input_data, "java_output": java_output})
 
 def home(request):
-    output = None
-    code = request.session.get("code", "")  
-    input_data = request.session.get("input", "")   
+    py_output = None
+    py_code = request.session.get("py_code", "")  
+    py_input_data = request.session.get("py_input", "")   
 
     if request.method == "POST":
-        code = request.POST.get("code")
-        input_data = request.POST.get("input")
+        py_code = request.POST.get("py_code","")
+        py_input_data = request.POST.get("py_input", "")
         language = "python"
 
-        request.session["code"] = code
-        request.session["input"] = input_data
+        request.session["code"] = py_code
+        request.session["input"] = py_input_data
+
+        if request.POST.get("action") == "share":
+            shared = SharedCode.objects.create(
+                language=language,
+                code=py_code,
+                input_data=py_input_data
+            )
+            print("hi python here", shared.unique_id)
+            return redirect(f"/share/{shared.unique_id}")
 
         if language == "python":
             with open("temp.py", "w") as file:
-                file.write(code)
+                file.write(py_code)
             try:
                 process = subprocess.run(
                     ["python", "temp.py"],
-                    input=input_data,
+                    input=py_input_data,
                     text=True,
                     capture_output=True,
                     timeout=5
                 )
-                output = process.stdout if process.returncode == 0 else process.stderr
+                py_output = process.stdout if process.returncode == 0 else process.stderr
             except subprocess.TimeoutExpired:
-                output = "Time Limit Exceeded"
+                py_output = "Time Limit Exceeded"
             except Exception as e:
-                output = str(e) 
-    return render(request, "index.html", {"output": output, "code": code, "input_data": input_data})
+                py_output = str(e) 
+    return render(request, "index.html", {"output": py_output, "code": py_code, "input_data": py_input_data})
 
    
 def view_shared_code(request, uid):
@@ -158,4 +159,10 @@ def view_shared_code(request, uid):
             "java_code": shared.code,
             "java_input_data": shared.input_data,
             "java_output" : None
+        })
+    if(language=='python'): 
+        return render(request, "index.html", {
+            "py_code": shared.code,
+            "py_input_data": shared.input_data,
+            "py_output" : None
         })
