@@ -218,3 +218,9 @@ def view_shared_code(request, uid):
             "c_input_data": shared.input_data,
             "c_output" : None
         })
+    if(language=='python'): 
+        return render(request, "index.html", {
+            "py_code": shared.code,
+            "py_input_data": shared.input_data,
+            "py_output" : None
+        })
