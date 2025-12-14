@@ -1,0 +1,95 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <!-- <title>Online Compiler</title> -->
+    {% block t %}
+    {% endblock %}  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    {% block css %}
+    {% endblock %}
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background: linear-gradient(90deg, #f0f0f0 1px, transparent 1px), linear-gradient(180deg, #f0f0f0 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        #codeEditor {
+            border: 1 solid #ccc;
+            height: 500px;
+        }
+        #input {
+            width: 98%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            font-family: monospace;
+        }
+        select, button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .output {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        .labels {
+            display: flex;
+            align-items: center;
+            gap: 10%; 
+        }
+        .label {
+            display: flex;
+            align-items: center; 
+            
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block heading %}
+    {% endblock %}  
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 300px;">
+            <a href="{% url 'home' %}" target="_blank">
+                <button style="display: flex; align-items: center; gap: 5px;">
+                    <img src="{% static 'images/python-logo.png' %}" alt="Python Logo" style="width: 20px; height: 20px;">
+                    Python
+                </button>
+            </a>
+            <a href="{% url 'cpp' %}" target="_blank">
+                <button style="display: flex; align-items: center; gap: 5px;">
+                    <img src="{% static 'images/cpp-logo.png' %}" alt="C++ Logo" style="width: 20px; height: 20px;">
+                    C++
+                </button>
+            </a>
+            <a href="{% url 'java' %}" target="_blank">
+                <button style="display: flex; align-items: center; gap: 5px;">
+                    <img src="{% static 'images/java-logo.png' %}" alt="Java Logo" style="width: 20px; height: 20px;">
+                    Java
+                </button>
+            </a>
+            
+        </div>
+
+        
+        <!-- CodeMirror JS -->
+        {% block content %}
+        {% endblock %}  
+    </div>
+</body>
+</html>
