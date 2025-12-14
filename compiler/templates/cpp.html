@@ -42,8 +42,7 @@
     <textarea id="cpp_code" name="cpp_code" placeholder="Write your code here...">{{ cpp_code|default:'' }}</textarea>
     <br>
     <label for="cpp_input">Provide Input:</label>
-    <textarea id="cpp_input" name="cpp_input"
-        placeholder="Enter input for your code...">{{ cpp_input_data|default:'' }} </textarea>
+    <textarea id="cpp_input" name="cpp_input" placeholder="Enter input for your code...">{{ cpp_input_data|default:'' }} </textarea>
     <br>
     <button type="submit">Run Code</button>
     <button type="submit" name="action" value="share" class="btn">Share Code</button>
@@ -55,9 +54,7 @@
 </div>
 {% endif %}
 <!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+
 
 <script>
 
@@ -67,9 +64,17 @@
         lineNumbers: true,
         indentUnit: 4,
         tabSize: 4,
-
+        autoCloseBrackets: true,
+        indentUnit: 4,
+        smartIndent: true,
+        matchBrackets: true,
+        lineWrapping: true,         
+        highlightSelectionMatches: true,
+        cursorBlinkRate: 530,
+        scrollbarStyle: "native",
+        viewportMargin: Infinity, 
     });
-    codeEditor.setSize(null, "410px");
+    codeEditor.setSize("100%", "600px");
 
     document.querySelector("form").addEventListener("submit", (event) => {
         document.getElementById("cpp_code").value = codeEditor.getValue();

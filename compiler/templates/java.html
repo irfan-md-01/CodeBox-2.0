@@ -8,17 +8,47 @@
 <h1>Java Online Compiler</h1>
 {% endblock %}
 
+{% block css %}
+<style>
+    #java_input {
+        width: 98%;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        font-family: monospace;
+    }
+
+    .btn {
+        padding: 12px 18px;
+        background: #4a6cf7;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .btn:hover {
+        background: #3a57d0;
+    }
+</style>
+{% endblock %}
+
+
+
 {% block content %}
 <form method="POST" action="/java">
     {% csrf_token %}
     <br>
-    <label for="code">Write your code:</label>
-    <textarea id="code" name="code" placeholder="Write your code here...">{{ code|default:'' }}</textarea>
+    <label for="java_code">Write your code:</label>
+    <textarea id="java_code" name="java_code" placeholder="Write your code here...">{{ java_code|default:'' }}</textarea>
     <br>
-    <label for="input">Provide Input:</label>
-    <textarea id="input" name="input" placeholder="Enter input for your code...">{{ input_data|default:'' }} </textarea>
+    <label for="java_input">Provide Input:</label>
+    <textarea id="java_input" name="java_input" placeholder="Enter input for your code...">{{ java_input_data|default:'' }} </textarea>
     <br>
     <button type="submit">Run Code</button>
+    <button type="submit" name="action" value="share" class="btn">Share Code</button>
 </form>
 {% if output %}
 <div class="output">
@@ -27,24 +57,28 @@
 </div>
 {% endif %}
 <!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
 
 <script>
     
-    const codeEditor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: "java", 
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("java_code"), {
+        mode: "text/x-java", 
         theme: "dracula",
         lineNumbers: true,
         indentUnit: 4,
         tabSize: 4,
-        
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        lineWrapping: true,         
+        highlightSelectionMatches: true,
+        cursorBlinkRate: 530,
+        scrollbarStyle: "native",
+        viewportMargin: Infinity, 
     });
-    codeEditor.setSize(null, "410px");
+
+    codeEditor.setSize(null, "600px");
     
-    document.querySelector("form").addEventListener("submit", () => {
-        document.getElementById("code").value = codeEditor.getValue();
+    document.querySelector("form").addEventListener("submit", (event) => {
+        document.getElementById("java_code").value = codeEditor.getValue();
     });
 </script>
 {% endblock %}

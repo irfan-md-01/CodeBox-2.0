@@ -61,7 +61,9 @@ def java(request):
     java_input_data= request.session.get("java_input", "")
 
     if request.method == "POST":
+        
         java_code = request.POST.get("java_code", "")
+        print(len(java_code))
         java_input_data = request.POST.get("java_input", "")
         language = "java"
         
@@ -71,6 +73,15 @@ def java(request):
 
         request.session["java_code"] = java_code
         request.session["java_input"] = java_input_data
+
+        if request.POST.get("action") == "share":
+            shared = SharedCode.objects.create(
+                language=language,
+                code=java_code,
+                input_data=java_input_data
+            )
+            print("hi java here", shared.unique_id)
+            return redirect(f"/share/{shared.unique_id}")
 
         if language == "java":
             with open("Main.java", "w") as file:
@@ -130,29 +141,21 @@ def home(request):
                 output = str(e) 
     return render(request, "index.html", {"output": output, "code": code, "input_data": input_data})
 
-
-def cpp_compiler(request):
-    if request.method == "POST":
-        code = request.POST.get("code")
-        language = request.POST.get("language")
-        input_data = request.POST.get("cpp_input")
-
-        # If user clicks Share
-        if request.POST.get("action") == "share":
-            shared = SharedCode.objects.create(
-                language=language,
-                code=code,
-                input_data=input_data
-            )
-            print("hi", shared.unique_id)
-            return redirect(f"/share/{shared.unique_id}")
-        
-
+   
 def view_shared_code(request, uid):
     print(uid)
     shared = SharedCode.objects.get(unique_id=uid)
-    return render(request, "cpp.html", {
-        "cpp_code": shared.code,
-        "cpp_input_data": shared.input_data,
-        "cpp_output" : None
-    })
+    language = shared.language
+
+    if(language=='cpp'): 
+        return render(request, "cpp.html", {
+            "cpp_code": shared.code,
+            "cpp_input_data": shared.input_data,
+            "cpp_output" : None
+        })
+    if(language=='java'): 
+        return render(request, "java.html", {
+            "java_code": shared.code,
+            "java_input_data": shared.input_data,
+            "java_output" : None
+        })
