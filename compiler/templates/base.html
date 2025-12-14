@@ -64,23 +64,29 @@
     <div class="container">
         {% block heading %}
     {% endblock %}  
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 300px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 300px; gap: 12px;">
             <a href="{% url 'home' %}" target="_blank">
-                <button style="display: flex; align-items: center; gap: 5px;">
+                <button style="display: flex; align-items: center; gap: 7px; ">
                     <img src="{% static 'images/python-logo.png' %}" alt="Python Logo" style="width: 20px; height: 20px;">
                     Python
                 </button>
             </a>
             <a href="{% url 'cpp' %}" target="_blank">
-                <button style="display: flex; align-items: center; gap: 5px;">
+                <button style="display: flex; align-items: center; gap: 7px;">
                     <img src="{% static 'images/cpp-logo.png' %}" alt="C++ Logo" style="width: 20px; height: 20px;">
                     C++
                 </button>
             </a>
             <a href="{% url 'java' %}" target="_blank">
-                <button style="display: flex; align-items: center; gap: 5px;">
+                <button style="display: flex; align-items: center; gap: 7px;">
                     <img src="{% static 'images/java-logo.png' %}" alt="Java Logo" style="width: 20px; height: 20px;">
                     Java
+                </button>
+            </a>
+            <a href="{% url 'c' %}" target="_blank">
+                <button style="display: flex; align-items: center; gap: 7px;">
+                    <img src="{% static 'images/c-logo.png' %}" alt="c Logo" style="width: 20px; height: 20px;">
+                    C
                 </button>
             </a>
             
@@ -91,6 +97,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/match-highlighter.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/searchcursor.min.js"></script>
         <!-- CodeMirror JS -->
         {% block content %}
         {% endblock %}  

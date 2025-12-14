@@ -49,7 +49,57 @@ def cpp(request):
         except Exception as e:
             cpp_output = str(e)
 
-    return render(request, "cpp.html", {"cpp_code": cpp_code, "cpp_input_data": cpp_input_data, "cpp_output": cpp_output})
+    return render(request, "cpp.html", {"cpp_code": cpp_code, "cpp_input_data": cpp_input_data.rstrip(), "cpp_output": cpp_output})
+
+
+def c(request):
+    c_output = None
+    c_code = request.session.get("c_code", "")
+    c_input_data= request.session.get("c_input", "")
+
+    if request.method == "POST":
+        c_code = request.POST.get("c_code", "")
+        c_input_data = request.POST.get("c_input", "")
+        language = "c"
+        
+        request.session["c_code"] = c_code
+        request.session["c_input"] = c_input_data
+
+        if request.POST.get("action") == "share":
+            shared = SharedCode.objects.create(
+                language=language,
+                code=c_code,
+                input_data=c_input_data
+            )
+            print("hi", shared.unique_id)
+            return redirect(f"/share/{shared.unique_id}")
+             
+        if language == "c":
+            with open("tempc.c", "w") as file:
+                file.write(c_code)
+        try:
+            compile_process = subprocess.run(
+                ["gcc", "tempc.c", "-o", "tempc"], capture_output=True, text=True
+            )
+
+            if compile_process.returncode != 0:
+                c_output = compile_process.stderr
+            else:
+                run_process = subprocess.run(
+                    ["./tempc"],
+                    input=c_input_data,
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                c_output = run_process.stdout
+
+        except subprocess.TimeoutExpired:
+            c_output = "Time Limit Exceeded"
+        except Exception as e:
+            c_output = str(e)
+
+    return render(request, "c_lang.html", {"c_code": c_code, "c_input_data": c_input_data.rstrip(), "c_output": c_output})
 
 def java(request):
     java_output = None
@@ -100,7 +150,7 @@ def java(request):
         except Exception as e:
             java_output = str(e)
 
-    return render(request, "java.html", {"java_code": java_code, "java_input_data": java_input_data, "java_output": java_output})
+    return render(request, "java.html", {"java_code": java_code, "java_input_data": java_input_data.rstrip(), "java_output": java_output})
 
 def home(request):
     py_output = None
@@ -108,6 +158,7 @@ def home(request):
     py_input_data = request.session.get("py_input", "")   
 
     if request.method == "POST":
+        
         py_code = request.POST.get("py_code","")
         py_input_data = request.POST.get("py_input", "")
         language = "python"
@@ -136,11 +187,12 @@ def home(request):
                     timeout=5
                 )
                 py_output = process.stdout if process.returncode == 0 else process.stderr
+                
             except subprocess.TimeoutExpired:
                 py_output = "Time Limit Exceeded"
             except Exception as e:
                 py_output = str(e) 
-    return render(request, "index.html", {"output": py_output, "code": py_code, "input_data": py_input_data})
+    return render(request, "index.html", {"py_output": py_output, "py_code": py_code, "input_data": py_input_data.rstrip()})
 
    
 def view_shared_code(request, uid):
@@ -160,9 +212,9 @@ def view_shared_code(request, uid):
             "java_input_data": shared.input_data,
             "java_output" : None
         })
-    if(language=='python'): 
-        return render(request, "index.html", {
-            "py_code": shared.code,
-            "py_input_data": shared.input_data,
-            "py_output" : None
+    if(language=='c'): 
+        return render(request, "c_lang.html", {
+            "c_code": shared.code,
+            "c_input_data": shared.input_data,
+            "c_output" : None
         })

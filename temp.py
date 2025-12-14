@@ -1,2 +1,1 @@
-for i in range(1000):
-    print("HI")
+print(789466)

@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block heading %}
-<h1>Python Online Compiler</h1>
+<h1>C Online Compiler</h1>
 {% endblock %}
 
 {% block css %}
 <style>
-    #py_input {
+    #c_input {
         width: 98%;
         height: 100px;
         margin-top: 10px;
@@ -35,34 +35,29 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" action="/">
+<form method="POST" action="/c">
     {% csrf_token %}
     <br>
-    <label for="py_code">Write your code:</label>
-    <textarea id="py_code" name="py_code" placeholder="Write your code here...">{{ py_code|default:'' }}</textarea>
+    <label for="c_code">Write your code:</label>
+    <textarea id="c_code" name="c_code" placeholder="Write your code here...">{{ c_code|default:'' }}</textarea>
     <br>
-    <label for="py_input">Provide Input:</label>
-    <textarea id="py_input" name="py_input"
-        placeholder="Enter input for your code...">{{ py_input_data|default:'' }} </textarea>
+    <label for="c_input">Provide Input:</label>
+    <textarea id="c_input" name="c_input" placeholder="Enter input for your code...">{{ c_input_data|default:'' }} </textarea>
     <br>
     <button type="submit">Run Code</button>
     <button type="submit" name="action" value="share" class="btn">Share Code</button>
 </form>
-{% if py_output %}
+{% if c_output %}
 <div class="output">
     <h3>Output:</h3>
-    <pre>{{ py_output }}</pre>
+    <pre>{{ c_output }}</pre>
 </div>
 {% endif %}
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/searchcursor.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/match-highlighter.min.js"></script>
+
 <script>
-    const codeEditor = CodeMirror.fromTextArea(document.getElementById("py_code"), {
-        mode: "python",
+
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("c_code"), {
+        mode: "text/x-csrc",
         theme: "dracula",
         lineNumbers: true,
         indentUnit: 4,
@@ -71,19 +66,16 @@
         indentUnit: 4,
         smartIndent: true,
         matchBrackets: true,
-        lineWrapping: true,
+        lineWrapping: true,         
         highlightSelectionMatches: true,
         cursorBlinkRate: 530,
         scrollbarStyle: "native",
-        viewportMargin: Infinity,
-
+        viewportMargin: Infinity, 
     });
-
     codeEditor.setSize("100%", "600px");
 
     document.querySelector("form").addEventListener("submit", (event) => {
-        document.getElementById("py_code").value = codeEditor.getValue();
+        document.getElementById("c_code").value = codeEditor.getValue();
     });
-
 </script>
 {% endblock %}
